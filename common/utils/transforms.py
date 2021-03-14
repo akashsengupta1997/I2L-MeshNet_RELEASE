@@ -45,6 +45,27 @@ def rigid_align(A, B):
     A2 = np.transpose(np.dot(c*R, np.transpose(A))) + t
     return A2
 
+def scale_and_translation_transform_batch(P, T):
+    """
+    First Normalises batch of input 3D meshes P such that each mesh has mean (0, 0, 0) and
+    RMS distance from mean = 1.
+    Then transforms P such that it has the same mean and RMSD as T.
+    :param P: (batch_size, N, 3) batch of N 3D meshes to transform.
+    :param T: (batch_size, N, 3) batch of N reference 3D meshes.
+    :return: P transformed
+    """
+    P_mean = np.mean(P, axis=1, keepdims=True)
+    P_trans = P - P_mean
+    P_scale = np.sqrt(np.sum(P_trans ** 2, axis=(1, 2), keepdims=True) / P.shape[1])
+    P_normalised = P_trans / P_scale
+
+    T_mean = np.mean(T, axis=1, keepdims=True)
+    T_scale = np.sqrt(np.sum((T - T_mean) ** 2, axis=(1, 2), keepdims=True) / T.shape[1])
+
+    P_transformed = P_normalised * T_scale + T_mean
+
+    return P_transformed
+
 def transform_joint_to_other_db(src_joint, src_name, dst_name):
     src_joint_num = len(src_name)
     dst_joint_num = len(dst_name)

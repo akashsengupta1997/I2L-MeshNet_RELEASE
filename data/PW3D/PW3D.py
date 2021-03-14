@@ -12,7 +12,7 @@ from pycocotools.coco import COCO
 from config import cfg
 from utils.smpl import SMPL
 from utils.preprocessing import load_img, get_bbox, process_bbox, generate_patch_image, augmentation
-from utils.transforms import cam2pixel, pixel2cam, rigid_align
+from utils.transforms import cam2pixel, pixel2cam, rigid_align, scale_and_translation_transform_batch
 from utils.vis import vis_keypoints, vis_mesh, save_obj
 
 class PW3D(torch.utils.data.Dataset):
@@ -118,7 +118,7 @@ class PW3D(torch.utils.data.Dataset):
         
         annots = self.datalist
         sample_num = len(outs)
-        eval_result = {'mpjpe_lixel': [], 'pa_mpjpe_lixel': [], 'mpjpe_param': [], 'pa_mpjpe_param': []}
+        eval_result = {'mpjpe_lixel': [], 'sc_mpjpe_lixel': [], 'pa_mpjpe_lixel': [], 'mpjpe_param': [], 'sc_mpjpe_param': [], 'pa_mpjpe_param': []}
         for n in range(sample_num):
             annot = annots[cur_sample_idx + n]
             out = outs[n]
@@ -156,8 +156,10 @@ class PW3D(torch.utils.data.Dataset):
             pose_coord_out_h36m = pose_coord_out_h36m - pose_coord_out_h36m[self.h36m_root_joint_idx,None] # root-relative
             pose_coord_out_h36m = pose_coord_out_h36m[self.h36m_eval_joint,:]
             pose_coord_out_h36m_aligned = rigid_align(pose_coord_out_h36m, pose_coord_gt_h36m)
+            pose_coord_out_h36m_sc = scale_and_translation_transform_batch(pose_coord_out_h36m, pose_coord_gt_h36m)
             eval_result['mpjpe_lixel'].append(np.sqrt(np.sum((pose_coord_out_h36m - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
             eval_result['pa_mpjpe_lixel'].append(np.sqrt(np.sum((pose_coord_out_h36m_aligned - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
+            eval_result['sc_mpjpe_lixel'].append(np.sqrt(np.sum((pose_coord_out_h36m_sc - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
 
             # h36m joint from parameter mesh
             if cfg.stage == 'param':
@@ -166,8 +168,10 @@ class PW3D(torch.utils.data.Dataset):
                 pose_coord_out_h36m = pose_coord_out_h36m - pose_coord_out_h36m[self.h36m_root_joint_idx,None] # root-relative
                 pose_coord_out_h36m = pose_coord_out_h36m[self.h36m_eval_joint,:]
                 pose_coord_out_h36m_aligned = rigid_align(pose_coord_out_h36m, pose_coord_gt_h36m)
+                pose_coord_out_h36m_sc = scale_and_translation_transform_batch(pose_coord_out_h36m, pose_coord_gt_h36m)
                 eval_result['mpjpe_param'].append(np.sqrt(np.sum((pose_coord_out_h36m - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
                 eval_result['pa_mpjpe_param'].append(np.sqrt(np.sum((pose_coord_out_h36m_aligned - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
+                eval_result['sc_mpjpe_param'].append(np.sqrt(np.sum((pose_coord_out_h36m_sc - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
 
             vis = False
             if vis:
