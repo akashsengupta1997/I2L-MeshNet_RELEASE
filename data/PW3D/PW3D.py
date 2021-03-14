@@ -157,8 +157,7 @@ class PW3D(torch.utils.data.Dataset):
             pose_coord_out_h36m = pose_coord_out_h36m - pose_coord_out_h36m[self.h36m_root_joint_idx,None] # root-relative
             pose_coord_out_h36m = pose_coord_out_h36m[self.h36m_eval_joint,:]
             pose_coord_out_h36m_aligned = rigid_align(pose_coord_out_h36m, pose_coord_gt_h36m)
-            print(pose_coord_out_h36m.shape, pose_coord_gt_h36m.shape)
-            pose_coord_out_h36m_sc = scale_and_translation_transform_batch(pose_coord_out_h36m, pose_coord_gt_h36m)
+            pose_coord_out_h36m_sc = scale_and_translation_transform_batch(pose_coord_out_h36m[None, :, :], pose_coord_gt_h36m[None, :, :])[0, :, :]
             eval_result['mpjpe_lixel'].append(np.sqrt(np.sum((pose_coord_out_h36m - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
             eval_result['pa_mpjpe_lixel'].append(np.sqrt(np.sum((pose_coord_out_h36m_aligned - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
             eval_result['sc_mpjpe_lixel'].append(np.sqrt(np.sum((pose_coord_out_h36m_sc - pose_coord_gt_h36m)**2,1)).mean() * 1000) # meter -> milimeter
