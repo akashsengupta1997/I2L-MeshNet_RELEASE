@@ -19,7 +19,8 @@ class PW3D(torch.utils.data.Dataset):
     def __init__(self, transform, data_split):
         self.transform = transform
         self.data_split = data_split
-        self.data_path = osp.join('..', 'data', 'PW3D', 'data')
+        # self.data_path = osp.join('..', 'data', 'PW3D', 'data')
+        self.data_path = '/scratch2/as2562/datasets/3DPW'
         self.human_bbox_root_dir = osp.join('..', 'data', 'PW3D', 'rootnet_output', 'bbox_root_pw3d_output.json')
        
         # SMPL joint set
