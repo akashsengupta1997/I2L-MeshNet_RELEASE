@@ -191,9 +191,11 @@ class PW3D(torch.utils.data.Dataset):
     def print_eval_result(self, eval_result):
         print('MPJPE from lixel mesh: %.2f mm' % np.mean(eval_result['mpjpe_lixel']))
         print('PA MPJPE from lixel mesh: %.2f mm' % np.mean(eval_result['pa_mpjpe_lixel']))
+        print('SC MPJPE from lixel mesh: %.2f mm' % np.mean(eval_result['sc_mpjpe_lixel']))
 
         print('MPJPE from param mesh: %.2f mm' % np.mean(eval_result['mpjpe_param']))
         print('PA MPJPE from param mesh: %.2f mm' % np.mean(eval_result['pa_mpjpe_param']))
+        print('SC MPJPE from param mesh: %.2f mm' % np.mean(eval_result['sc_mpjpe_param']))
 
 
 
