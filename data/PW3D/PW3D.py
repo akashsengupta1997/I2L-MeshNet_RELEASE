@@ -19,8 +19,7 @@ class PW3D(torch.utils.data.Dataset):
     def __init__(self, transform, data_split):
         self.transform = transform
         self.data_split = data_split
-        # self.data_path = osp.join('..', 'data', 'PW3D', 'data')
-        self.data_path = '/scratch2/as2562/datasets/3DPW'
+        self.data_path = osp.join('..', 'data', 'PW3D', 'data')
         self.human_bbox_root_dir = osp.join('..', 'data', 'PW3D', 'rootnet_output', 'bbox_root_pw3d_output.json')
        
         # SMPL joint set
@@ -64,7 +63,8 @@ class PW3D(torch.utils.data.Dataset):
             img_width, img_height = img['width'], img['height']
             sequence_name = img['sequence']
             img_name = img['file_name']
-            img_path = osp.join(self.data_path, 'imageFiles', sequence_name, img_name)
+            # img_path = osp.join(self.data_path, 'imageFiles', sequence_name, img_name)
+            img_path = osp.join('/scratch2/as2562/datasets/3DPW/', 'imageFiles', sequence_name, img_name)
             cam_param = {k: np.array(v, dtype=np.float32) for k,v in img['cam_param'].items()}
             smpl_param = ann['smpl_param']
             if self.data_split == 'test' and not cfg.use_gt_info:
