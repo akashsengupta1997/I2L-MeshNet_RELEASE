@@ -42,8 +42,7 @@ def main():
     eval_result = {}
     cur_sample_idx = 0
     for itr, (inputs, targets, meta_info) in enumerate(tqdm(tester.batch_generator)):
-        if itr == 10:
-            break
+        
         # forward
         with torch.no_grad():
             out = tester.model(inputs, targets, meta_info, 'test')
