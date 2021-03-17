@@ -199,10 +199,10 @@ class PW3D(torch.utils.data.Dataset):
 
         sc_mpjpe_lixel_per_frame = np.stack(eval_result['sc_mpjpe_lixel'], axis=0) / 1000
         print(sc_mpjpe_lixel_per_frame.shape, np.mean(sc_mpjpe_lixel_per_frame))
-        save_dir_path = "/data/cvfs/as2562/I2L-MeshNet_RELEASE/evaluation/3dpw"
+        save_dir_path = "/data/cvfs/as2562/I2L-MeshNet/evaluation/3dpw"
         # if not osp.exists(save_dir_path):
         #     os.makedirs(save_dir_path)
         print(osp.join(save_dir_path, "mpjpes_sc_per_frame.npy"))
-        np.save(file=osp.join(save_dir_path, "mpjpe_per_frame.npy"), arr=sc_mpjpe_lixel_per_frame)
+        np.save(file=osp.join(save_dir_path, "mpjpes_sc_per_frame.npy"), arr=sc_mpjpe_lixel_per_frame)
 
 
