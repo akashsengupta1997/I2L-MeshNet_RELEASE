@@ -121,9 +121,6 @@ class PW3D(torch.utils.data.Dataset):
         sample_num = len(outs)
         eval_result = {'mpjpe_lixel': [], 'sc_mpjpe_lixel': [], 'pa_mpjpe_lixel': [], 'mpjpe_param': [], 'sc_mpjpe_param': [], 'pa_mpjpe_param': []}
         for n in range(sample_num):
-            print(n)
-            if n == 20:
-                break
             annot = annots[cur_sample_idx + n]
             out = outs[n]
             
