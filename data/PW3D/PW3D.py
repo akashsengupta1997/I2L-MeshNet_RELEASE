@@ -197,8 +197,8 @@ class PW3D(torch.utils.data.Dataset):
         print('PA MPJPE from param mesh: %.2f mm' % np.mean(eval_result['pa_mpjpe_param']))
         print('SC MPJPE from param mesh: %.2f mm' % np.mean(eval_result['sc_mpjpe_param']))
 
-        sc_mpjpe_lixel_per_frame = np.stack(eval_result['sc_mpjpe_lixel'], axis=0)
-        print(sc_mpjpe_lixel_per_frame.shape)
+        sc_mpjpe_lixel_per_frame = np.stack(eval_result['sc_mpjpe_lixel'], axis=0) / 1000
+        print(sc_mpjpe_lixel_per_frame.shape, np.mean(sc_mpjpe_lixel_per_frame))
         save_dir_path = "/scratch/as2562/I2L-MeshNet_RELEASE/evaluation"
         if not osp.exists(save_dir_path):
             os.makedirs(save_dir_path)
