@@ -203,5 +203,6 @@ class PW3D(torch.utils.data.Dataset):
         if not osp.exists(save_dir_path):
             os.makedirs(save_dir_path)
         print(osp.join(save_dir_path, "mpjpe_per_frame.npy"))
+        np.save(file=osp.join(save_dir_path, "mpjpe_per_frame.npy"), arr=sc_mpjpe_lixel_per_frame)
 
 
